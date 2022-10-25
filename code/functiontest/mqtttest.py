@@ -86,8 +86,8 @@ if WIFI_Connect():
 
     SERVER = 'mq.tongxinmao.com'
     PORT = 18830
-    CLIENT_ID = 'pyClockxuke' # 客户端ID
-    TOPIC = '/pyxuke/stock/#' # TOPIC名称
+    CLIENT_ID = 'pyClockxk' # 客户端ID
+    TOPIC = '/pyxuke/stock/1111' # TOPIC名称
 
     client = MQTTClient(CLIENT_ID, SERVER, PORT) #建立客户端对象
     client.set_callback(MQTT_callback)  #配置回调函数
