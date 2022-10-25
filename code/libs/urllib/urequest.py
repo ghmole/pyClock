@@ -22,7 +22,7 @@ def urlopen(url, data=None, method="GET"):
         host, port = host.split(":", 1)
         port = int(port)
 
-    ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
+    ai = usocket.getaddrinfo(host, port, usocket.AF_INET, usocket.SOCK_STREAM)
     ai = ai[0]
 
     s = usocket.socket(ai[0], ai[1], ai[2])
