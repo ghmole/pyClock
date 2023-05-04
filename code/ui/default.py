@@ -180,7 +180,7 @@ def weather_display(city,weather):
             d.drawRect(115, 5, 50,  24, ZHONGDU, border=1,fillcolor=ZHONGDU)
             printChinese('重度',117,5,color=BLACK,backcolor=ZHONGDU,size=2)
             
-        elif 300 <= int(weather[4]) < 500:#严重
+        elif 300 <= int(weather[4]) <= 500:#严重
             d.drawRect(115, 5, 50,  24, YANZHONG, border=1,fillcolor=YANZHONG)
             printChinese('严重',117,5,color=BLACK,backcolor=YANZHONG,size=2)
     except:
@@ -191,6 +191,7 @@ def weather_display(city,weather):
     d.Picture(10,175,"/data/picture/default/temp.jpg")
     d.drawRect(44, 185, 48, 10, WHITE, border=2,fillcolor=BLACK)
     d.drawRect(46, 187, 25, 6, RED, border=2,fillcolor=RED)
+    d.printStr('   ', 100, 177, BLACK, size=2) #消除重影
     d.printStr(weather[7], 115-len(weather[7]*5), 177, RED, size=2)
     printChinese('℃',135,177,color=WHITE,backcolor=BLACK,size=2)
     
@@ -198,8 +199,6 @@ def weather_display(city,weather):
     d.Picture(10,205,"/data/picture/default/humi.jpg")
     d.drawRect(44, 215, 48, 10, WHITE, border=2,fillcolor=BLACK)
     d.drawRect(46, 217, 30, 6, DEEPGREEN, border=2,fillcolor=DEEPGREEN)
-    d.printStr('100', 100, 207, DEEPGREEN, size=2)
-    time.sleep(1)
 
     if weather[8] == '100':
         d.printStr(weather[8], 100, 207, DEEPGREEN, size=2)
@@ -212,7 +211,7 @@ def message_display(weather,datetime):
     
     global message_num
     
-    #今天天气
+    #实时天气
     if message_num == 0:
         printChinese('       ',5,40,color=WHITE,backcolor=BLACK,size=2) #清除显示残留
         if len(weather[3])<3:#2个文字以内
@@ -256,7 +255,28 @@ def message_display(weather,datetime):
         elif weather[3] == '雾':
             d.Picture(175,5,"/data/picture/default/weather/wu.jpg")
             
-        else:
+        elif weather[3] == '雨夹雪':
+            d.Picture(175,5,"/data/picture/default/weather/yujiaxue.jpg")
+            
+        elif weather[3] == '小雪':
+            d.Picture(175,5,"/data/picture/default/weather/xiaoxue.jpg")
+
+        elif weather[3] == '中雪':
+            d.Picture(175,5,"/data/picture/default/weather/daxue.jpg")
+            
+        elif weather[3] == '大雪':
+            d.Picture(175,5,"/data/picture/default/weather/daxue.jpg")
+            
+        elif weather[3] == '扬沙':
+            d.Picture(175,5,"/data/picture/default/weather/sand.jpg")
+            
+        elif weather[3] == '浮尘':
+            d.Picture(175,5,"/data/picture/default/weather/sand.jpg")
+            
+        elif weather[3] == '沙尘暴':
+            d.Picture(175,5,"/data/picture/default/weather/sand.jpg")
+            
+        else: #未知天气
             d.Picture(175,5,"/data/picture/default/weather/no.jpg")
 
     #今天天气
@@ -273,9 +293,16 @@ def message_display(weather,datetime):
     #风向
     elif message_num == 2:
         printChinese('       ',5,40,color=WHITE,backcolor=BLACK,size=2) #清除显示残留
-        printChinese(weather[5],30,40,color=WHITE,backcolor=BLACK,size=2)
-        d.printStr(weather[6],110, 40, WHITE, size=2)
-        printChinese('级',125,40,color=WHITE,backcolor=BLACK,size=2)
+        
+        if '无' in weather[5]: #无持续风向
+            
+            printChinese(weather[5],30,40,color=WHITE,backcolor=BLACK,size=2)
+        
+        else: #有风向
+            
+            printChinese(weather[5],30,40,color=WHITE,backcolor=BLACK,size=2)
+            d.printStr(weather[6],110, 40, WHITE, size=2)
+            printChinese('级',125,40,color=WHITE,backcolor=BLACK,size=2)
   
     #最高温度
     elif message_num == 3:
@@ -296,28 +323,52 @@ def message_display(weather,datetime):
     if message_num == 5:
         message_num = 0
     
+#月，日显示重影标志位
+month_node = 0
+day_node = 0
+
 def datetime_display(datetime):
+    
     #日期显示
     year = datetime[0]
     month = datetime[1]
     day = datetime[2]
     week = datetime[3]
     
+    global month_node,day_node #月，日显示重影标志位
+    
+    #月显示
     if month > 9:
         d.printStr(str(month), 5, 140, WHITE, size=2)
+        month_node = 1
+        
     else:
+        
+        if month_node == 1: #月份从双位数变换到单位数
+            d.printStr('  ', 5, 140, BLACK, size=2) #消除月显示重影
+            month_node = 0
+            
         d.printStr(str(month), 13, 140, WHITE, size=2)
         
     printChinese('月',30,140,color=WHITE,backcolor=BLACK,size=2)
     
+    #日显示
     if day > 9:
         d.printStr(str(day), 55, 140, WHITE, size=2)
+        day_node = 1
+        
     else:
+        
+        if day_node == 1: #日从双位数变换到单位数
+            d.printStr('  ', 55, 140, BLACK, size=2) #消除日显示重影
+            day_node = 0
+            
         d.printStr(str(day), 63, 140, WHITE, size=2)
+        
     printChinese('日',80,140,color=WHITE,backcolor=BLACK,size=2)
-
-    printChinese('周'+week_list[week],115,140,color=WHITE,backcolor=BLACK,size=2)
     
+    #周显示
+    printChinese('周'+week_list[week],115,140,color=WHITE,backcolor=BLACK,size=2)
     
     #时间显示
     second = datetime[6]
